@@ -2,6 +2,7 @@
 package lesson2.task1
 
 import lesson1.task1.discriminant
+import lesson1.task1.sqr
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -141,7 +142,13 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
  * прямоугольным (вернуть 1) или тупоугольным (вернуть 2).
  * Если такой треугольник не существует, вернуть -1.
  */
-fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
+fun triangleKind(a: Double, b: Double, c: Double): Int {
+    val triangle = sortedSetOf(a, b, c)
+    if (triangle.last() > triangle.first() + triangle.elementAt(1)) return -1
+    else if (sqr(triangle.last()) > (sqr(triangle.first()) + sqr(triangle.elementAt(1)))) return 2
+    else if (sqr(triangle.last()) == (sqr(triangle.first()) + sqr(triangle.elementAt(1)))) return 1
+    else return 0
+}
 
 /**
  * Средняя
@@ -151,4 +158,11 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int = TODO()
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
+    val AB = a..b
+    val CD = c..d
+    val cross = AB.filter { it in CD }
+    return cross.count() - 1
+
+}
+
