@@ -1,6 +1,8 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson3.task1
 
+import kotlin.math.min
 import kotlin.math.sqrt
 
 /**
@@ -9,11 +11,10 @@ import kotlin.math.sqrt
  * Вычисление факториала
  */
 fun factorial(n: Int): Double {
-    var result = 1.0
-    for (i in 1..n) {
-        result = result * i // Please do not fix in master
-    }
-    return result
+    return if (n <= 1)
+        1.0
+    else
+        n * factorial(n - 1)
 }
 
 /**
@@ -38,7 +39,7 @@ fun isPrime(n: Int): Boolean {
  */
 fun isPerfect(n: Int): Boolean {
     var sum = 1
-    for (m in 2..n/2) {
+    for (m in 2..n / 2) {
         if (n % m > 0) continue
         sum += m
         if (sum > n) break
@@ -66,7 +67,15 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    var num = n
+    var rank = 0
+    do {
+        num /= 10
+        rank++
+    } while (num > 0)
+    return rank
+}
 
 /**
  * Простая
@@ -74,7 +83,14 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    var fibRow = mutableListOf(1, 1, 2, 3, 5, 8)
+    if (n < fibRow.count()) return fibRow[n - 1]
+    else for (i in 7..n){
+        fibRow.add(fibRow[i - 2] + fibRow[i - 3])
+    }
+    return fibRow.last()
+}
 
 /**
  * Простая
@@ -82,7 +98,16 @@ fun fib(n: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+fun lcm(m: Int, n: Int): Int {
+    var rez = m*n
+    var i = m*n
+    while (i >= min(m, n)) {
+        i--
+        if (i % m == 0 && i % n == 0)
+            rez = i
+    }
+    return rez
+}
 
 /**
  * Простая
