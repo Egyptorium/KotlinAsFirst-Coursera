@@ -110,6 +110,7 @@ fun lcm(m: Int, n: Int): Int {
         k--
     }
     return rez
+
 }
 
 /**
