@@ -2,9 +2,9 @@
 
 package lesson3.task1
 
-import kotlin.math.min
-import kotlin.math.max
-import kotlin.math.sqrt
+//import kotlin.math.min
+//import kotlin.math.max
+import kotlin.math.*
 
 /**
  * Пример
@@ -87,7 +87,7 @@ fun digitNumber(n: Int): Int {
 fun fib(n: Int): Int {
     var fibRow = mutableListOf(1, 1, 2, 3, 5, 8)
     if (n < fibRow.count()) return fibRow[n - 1]
-    else for (i in 7..n){
+    else for (i in 7..n) {
         fibRow.add(fibRow[i - 2] + fibRow[i - 3])
     }
     return fibRow.last()
@@ -100,16 +100,13 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var rez = m * n
-    var k = m * n
-    while (k >= max(m, n) && k > 1) {
-
+    var k = max(m, n)
+    while (k < m * n) {
         if (k % m == 0 && k % n == 0)
-            rez = k
-        println (listOf(m, n, k))
-        k--
+            return k
+        k += max(m, n)
     }
-    return rez
+    return m * n
 
 }
 
@@ -118,14 +115,33 @@ fun lcm(m: Int, n: Int): Int {
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    for (i in 2..(sqrt(n.toDouble()) + 1).toInt())
+        if (n % i == 0)
+            return i
+    return n
+}
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    var divisors = mutableSetOf(1)
+    for (i in 2..(sqrt(n.toDouble()) + 1).toInt())
+        if (n % i == 0) {
+            divisors.add(i)
+            if (n % (n / i) == 0)
+                divisors.add(n / i)
+        }
+    var rez = 1
+    for (x in divisors.sorted().reversed()) {
+        if (rez * x < n)
+            rez *= x
+    }
+    return rez
+}
 
 /**
  * Простая
@@ -134,7 +150,26 @@ fun maxDivisor(n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    fun divSearch(n: Int): Set<Int> {
+        var divisors = mutableSetOf(1)
+        for (i in 2..(sqrt(n.toDouble()) + 1).toInt())
+            if (n % i == 0) {
+                divisors.add(i)
+                if (n % (n / i) == 0)
+                    divisors.add(n / i)
+            }
+        divisors.add(n)
+        return divisors.sorted().toSet()
+    }
+
+    val mDivisors = divSearch(m)
+    val nDivisors = divSearch(n)
+    for (i in mDivisors)
+        if (i != 1 && i in nDivisors)
+            return false
+    return true
+}
 
 /**
  * Простая
