@@ -85,7 +85,7 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
-    var fibRow = mutableListOf(1, 1, 2, 3, 5, 8)
+    val fibRow = mutableListOf(1, 1, 2, 3, 5, 8)
     if (n < fibRow.count()) return fibRow[n - 1]
     else for (i in 7..n) {
         fibRow.add(fibRow[i - 2] + fibRow[i - 3])
@@ -128,7 +128,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var divisors = mutableSetOf(1)
+    val divisors = mutableSetOf(1)
     for (i in 2..(sqrt(n.toDouble()) + 1).toInt())
         if (n % i == 0) {
             divisors.add(i)
@@ -152,7 +152,7 @@ fun maxDivisor(n: Int): Int {
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     fun divSearch(n: Int): Set<Int> {
-        var divisors = mutableSetOf(1)
+        val divisors = mutableSetOf(1)
         for (i in 2..(sqrt(n.toDouble()) + 1).toInt())
             if (n % i == 0) {
                 divisors.add(i)
@@ -204,16 +204,38 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Написать функцию, которая находит, сколько шагов требуется для
  * этого для какого-либо начального X > 0.
  */
-fun collatzSteps(x: Int): Int = TODO()
+fun collatzSteps(x: Int): Int {
+    var steps = 0
+    var myX = x
+    while (myX != 1) {
+        if (myX % 2 == 0)
+            myX /= 2
+        else
+            myX = 3 * myX + 1
+        steps++
+    }
+    return steps
+}
 
 /**
  * Средняя
  *
- * Для заданного x рассчитать с заданной точностью eps
- * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
+ * Для заданного myX рассчитать с заданной точностью eps
+ * sin(myX) = myX - myX^3 / 3! + myX^5 / 5! - myX^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var power = 1
+    var rez = 0.0
+    var flag = 1
+    val myX = x % (2 * PI)
+    while (abs(myX.pow(power) / factorial(power)) >= eps) {
+        rez += flag * myX.pow(power) / factorial(power)
+        power += 2
+        flag *= -1
+    }
+    return rez
+}
 
 /**
  * Средняя
@@ -222,7 +244,18 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var power = 0
+    var rez = 0.0
+    var flag = 1
+    val myX = x % (2 * PI)
+    while (abs(myX.pow(power) / factorial(power)) >= eps) {
+        rez += flag * myX.pow(power) / factorial(power)
+        power += 2
+        flag *= -1
+    }
+    return rez
+}
 
 /**
  * Средняя
@@ -231,7 +264,15 @@ fun cos(x: Double, eps: Double): Double = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var x = n
+    var rez = 0
+    while (x > 0) {
+        rez = rez * 10 + (x % 10)
+        x /= 10
+    }
+    return rez
+}
 
 /**
  * Средняя
@@ -242,7 +283,7 @@ fun revert(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = n == revert(n)
 
 /**
  * Средняя
@@ -252,7 +293,15 @@ fun isPalindrome(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var x = n
+    val digits = mutableSetOf<Int>()
+    while (x > 0) {
+        digits.add(x % 10)
+        x /= 10
+    }
+    return digits.size > 1
+}
 
 /**
  * Сложная
@@ -263,7 +312,33 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var x = 1
+    var i = 1
+
+    while (true) {
+        var tmp = x.toDouble().pow(2).toInt()
+
+        var r = 0
+        while (tmp > 0) {
+            r++
+            if (i == n) {
+                tmp = x.toDouble().pow(2).toInt()
+                var tr = 0
+                while (tmp > 0) {
+                    tmp /= 10
+                    tr++
+                }
+                tmp = x.toDouble().pow(2).toInt()
+                return (tmp / 10.toDouble().pow(tr - r).toInt()) % 10
+            }
+            i++
+            tmp /= 10
+        }
+        x++
+    }
+
+}
 
 /**
  * Сложная
@@ -274,4 +349,29 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var x = 1
+    var i = 1
+
+    while (true) {
+        var tmp = fib(x)
+
+        var r = 0
+        while (tmp > 0) {
+            r++
+            if (i == n) {
+                tmp = fib(x)
+                var tr = 0
+                while (tmp > 0) {
+                    tmp /= 10
+                    tr++
+                }
+                tmp = fib(x)
+                return (tmp / 10.toDouble().pow(tr - r).toInt()) % 10
+            }
+            i++
+            tmp /= 10
+        }
+        x++
+    }
+}
