@@ -195,7 +195,7 @@ fun factorize(n: Int): List<Int> {
     var tmp = n
     val divisors = mutableListOf<Int>()
     while (tmp > 1) {
-        var min = minDivisor(tmp)
+        val min = minDivisor(tmp)
         divisors.add(min)
         tmp /= min
     }
@@ -237,7 +237,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = convert(n, base).map { if (it > 10) chr(it)}
+fun convertToString(n: Int, base: Int): String = convert(n, base).map { var a = 0; if (it > 9) a = it + 87 else a = it + 48; a.toChar() }.joinToString(separator = "")
 
 /**
  * Средняя
