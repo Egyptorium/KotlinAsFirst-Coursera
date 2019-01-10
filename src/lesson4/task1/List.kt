@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson3.task1.minDivisor
 import kotlin.math.*
+import kotlin.text.repeat
 
 /**
  * Пример
@@ -237,7 +238,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * строчными буквами: 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
-fun convertToString(n: Int, base: Int): String = convert(n, base).map { var a = 0; if (it > 9) a = it + 87 else a = it + 48; a.toChar() }.joinToString(separator = "")
+fun convertToString(n: Int, base: Int): String = convert(n, base).map { val a: Int; if (it > 9) a = it + 87 else a = it + 48; a.toChar() }.joinToString(separator = "")
 
 /**
  * Средняя
@@ -246,7 +247,13 @@ fun convertToString(n: Int, base: Int): String = convert(n, base).map { var a = 
  * из системы счисления с основанием base в десятичную.
  * Например: digits = (1, 3, 12), base = 14 -> 250
  */
-fun decimal(digits: List<Int>, base: Int): Int = TODO()
+fun decimal(digits: List<Int>, base: Int): Int {
+    var rez = 0
+    for ((n, x) in digits.reversed().withIndex()) {
+        rez += x * (base.toDouble().pow(n).toInt())
+    }
+    return rez
+}
 
 /**
  * Сложная
@@ -257,7 +264,15 @@ fun decimal(digits: List<Int>, base: Int): Int = TODO()
  * 10 -> a, 11 -> b, 12 -> c и так далее.
  * Например: str = "13c", base = 14 -> 250
  */
-fun decimalFromString(str: String, base: Int): Int = TODO()
+fun decimalFromString(str: String, base: Int): Int {
+    val digits = mutableListOf<Int>()
+    for (s in str)
+        if (s.toInt() > 57)
+            digits.add(s.toInt() - 87)
+        else
+            digits.add(s.toInt() - 48)
+    return decimal(digits, base)
+}
 
 /**
  * Сложная
@@ -267,13 +282,23 @@ fun decimalFromString(str: String, base: Int): Int = TODO()
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var number = n
+    val arabic = listOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    val roman = listOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+    val result = mutableListOf<String>()
+    for (i in 0 until arabic.size){
+        result.add(roman[i].repeat(number / arabic[i]))
+        number %= arabic[i]
+    }
+    return result.joinToString(separator = "")
+}
 
 /**
  * Очень сложная
  *
  * Записать заданное натуральное число 1..999999 прописью по-русски.
  * Например, 375 = "триста семьдесят пять",
- * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
+ * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"x
  */
 fun russian(n: Int): String = TODO()
