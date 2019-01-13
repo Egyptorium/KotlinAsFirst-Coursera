@@ -24,7 +24,7 @@ fun timeStrToSeconds(str: String): Int {
  * Дано число n от 0 до 99.
  * Вернуть его же в виде двухсимвольной строки, от "00" до "99"
  */
-fun twoDigitStr(n: Int) = if (n in 0..9) "0$n" else "$n"
+fun twoDigitStr(n: Int) = String.format("%02d", n)
 
 /**
  * Пример
@@ -71,7 +71,28 @@ fun main(args: Array<String>) {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30.02.2009) считается неверными
  * входными данными.
  */
-fun dateStrToDigit(str: String): String = TODO()
+fun isYearLeap (year: Int): Boolean {
+    if (year % 400 == 0) return true
+    if (year % 100 == 0) return false
+    if (year % 4 == 0) return true
+    return false
+}
+
+
+fun dateStrToDigit(str: String): String {
+
+
+    val months = "января, февраля, марта, апреля, мая, июня, июля, августа, сентября, октября, ноября, декабря".split(", ") //val line = readLine()
+    if (str != null) {
+        val date = str.split(" ")
+        if (date.size != 3 || date[0].toInt() < 1 || !(date[1] in months)) return ""
+        if ((months.indexOf(date[1]) + 1) in setOf(1,3,5,7,8,10,12) && date[0].toInt() > 31) return ""
+        if ((months.indexOf(date[1]) + 1) in setOf(4,6,9,11) && date[0].toInt() > 30) return ""
+        if (date[1] == "февраля" && ((isYearLeap(date[2].toInt()) && date[0].toInt() > 29) || (!isYearLeap(date[2].toInt()) && date[0].toInt() > 28))) return ""
+        return String.format("%02d.%02d.%04d", date[0].toInt(), months.indexOf(date[1]) + 1, date[2].toInt())
+    }
+    return ""
+}
 
 /**
  * Средняя
