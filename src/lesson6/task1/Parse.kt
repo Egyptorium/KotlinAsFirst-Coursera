@@ -80,20 +80,18 @@ fun isYearLeap (year: Int): Boolean {
 
 
 fun dateStrToDigit(str: String): String {
-
-
     val months = "января, февраля, марта, апреля, мая, июня, июля, августа, сентября, октября, ноября, декабря".split(", ") //val line = readLine()
-    if (str != null) {
+    try {
         val date = str.split(" ")
-        if (date.size != 3 || date[0].toInt() < 1 || !(date[1] in months)) return ""
-        if ((months.indexOf(date[1]) + 1) in setOf(1,3,5,7,8,10,12) && date[0].toInt() > 31) return ""
-        if ((months.indexOf(date[1]) + 1) in setOf(4,6,9,11) && date[0].toInt() > 30) return ""
+        if (date.size != 3 || date[0].toInt() < 1 || date[1] !in months) return ""
+        if ((months.indexOf(date[1]) + 1) in setOf(1, 3, 5, 7, 8, 10, 12) && date[0].toInt() > 31) return ""
+        if ((months.indexOf(date[1]) + 1) in setOf(4, 6, 9, 11) && date[0].toInt() > 30) return ""
         if (date[1] == "февраля" && ((isYearLeap(date[2].toInt()) && date[0].toInt() > 29) || (!isYearLeap(date[2].toInt()) && date[0].toInt() > 28))) return ""
         return String.format("%02d.%02d.%04d", date[0].toInt(), months.indexOf(date[1]) + 1, date[2].toInt())
+    } catch (e: NumberFormatException) {
+        return ""
     }
-    return ""
 }
-
 /**
  * Средняя
  *
@@ -104,7 +102,19 @@ fun dateStrToDigit(str: String): String {
  * Обратите внимание: некорректная с точки зрения календаря дата (например, 30 февраля 2009) считается неверными
  * входными данными.
  */
-fun dateDigitToStr(digital: String): String = TODO()
+fun dateDigitToStr(digital: String): String {
+    val months = "января, февраля, марта, апреля, мая, июня, июля, августа, сентября, октября, ноября, декабря".split(", ") //val line = readLine()
+    try {
+        val date = digital.split(".")
+        if (date.size != 3 || date[0].toInt() < 1 || date[1].toInt() !in 1..12) return ""
+        if ((date[1].toInt()) in setOf(1, 3, 5, 7, 8, 10, 12) && date[0].toInt() > 31) return ""
+        if ((date[1].toInt()) in setOf(4, 6, 9, 11) && date[0].toInt() > 30) return ""
+        if (date[1].toInt() == 2 && ((isYearLeap(date[2].toInt()) && date[0].toInt() > 29) || (!isYearLeap(date[2].toInt()) && date[0].toInt() > 28))) return ""
+        return String.format("%d %s %04d", date[0].toInt(), months[date[1].toInt() - 1], date[2].toInt())
+    } catch (e: NumberFormatException) {
+        return ""
+    }
+}
 
 /**
  * Средняя
@@ -118,7 +128,15 @@ fun dateDigitToStr(digital: String): String = TODO()
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-fun flattenPhoneNumber(phone: String): String = TODO()
+fun flattenPhoneNumber(phone: String): String {
+    var temp = ""
+    for (n in phone)
+        if (n in "+-() 0123456789") {
+            if (n in "+0123456789")
+                temp += n
+        } else return ""
+    return temp
+}
 
 /**
  * Средняя
@@ -130,7 +148,17 @@ fun flattenPhoneNumber(phone: String): String = TODO()
  * Прочитать строку и вернуть максимальное присутствующее в ней число (717 в примере).
  * При нарушении формата входной строки или при отсутствии в ней чисел, вернуть -1.
  */
-fun bestLongJump(jumps: String): Int = TODO()
+fun bestLongJump(jumps: String): Int? {
+    val nums = mutableSetOf<Int>()
+    for (n in jumps.split(" "))
+        if (n !in "-%")
+            try {
+                nums.add(n.toInt())
+            } catch (e: NumberFormatException) {
+                return -1
+            }
+    return if (nums.max() != null) nums.max() else -1
+}
 
 /**
  * Сложная
