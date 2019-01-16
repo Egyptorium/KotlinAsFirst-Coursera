@@ -2,6 +2,8 @@
 
 package lesson6.task1
 
+import java.lang.IllegalArgumentException
+
 /**
  * Пример
  *
@@ -157,7 +159,7 @@ fun bestLongJump(jumps: String): Int? {
             } catch (e: NumberFormatException) {
                 return -1
             }
-    return if (nums.max() != null) nums.max() else -1
+    return nums.max() ?: -1
 }
 
 /**
@@ -170,7 +172,23 @@ fun bestLongJump(jumps: String): Int? {
  * Прочитать строку и вернуть максимальную взятую высоту (230 в примере).
  * При нарушении формата входной строки вернуть -1.
  */
-fun bestHighJump(jumps: String): Int = TODO()
+fun bestHighJump(jumps: String): Int {
+    val nums = mutableListOf<Int>()
+    for (n in jumps.split(" "))
+        try {
+            nums.add(n.toInt())
+        } catch (e: NumberFormatException) {
+            for (m in n)
+                if (m !in "%+-") return -1
+                else if (m == '%') {
+                    nums.remove(nums.last())
+                    break
+                }
+        }
+
+
+    return nums.max() ?: -1
+}
 
 /**
  * Сложная
@@ -181,7 +199,30 @@ fun bestHighJump(jumps: String): Int = TODO()
  * Вернуть значение выражения (6 для примера).
  * Про нарушении формата входной строки бросить исключение IllegalArgumentException
  */
-fun plusMinus(expression: String): Int = TODO()
+fun plusMinus(expression: String): Int {
+    var action = ""
+    var result = 0
+    for ((i, n) in expression.split(" ").withIndex()) {
+        if (i % 2 != 0)
+            if (n == "+" || n == "-")
+                action = n
+            else
+                throw IllegalArgumentException("Нарушение формата входной строки")
+        else
+            try {
+                for (m in n)
+                    if (m !in "0123456789") throw IllegalArgumentException("Нарушение формата входной строки")
+                when (action) {
+                    "" -> result = n.toInt()
+                    "+" -> result += n.toInt()
+                    "-" -> result -= n.toInt()
+                }
+            } catch (e: NumberFormatException) {
+                throw IllegalArgumentException("Нарушение формата входной строки")
+            }
+    }
+    return result
+}
 
 /**
  * Сложная
@@ -192,8 +233,15 @@ fun plusMinus(expression: String): Int = TODO()
  * Вернуть индекс начала первого повторяющегося слова, или -1, если повторов нет.
  * Пример: "Он пошёл в в школу" => результат 9 (индекс первого 'в')
  */
-fun firstDuplicateIndex(str: String): Int = TODO()
-
+fun firstDuplicateIndex(str: String): Int {
+    var prevWord = ""
+    for (word in str.toLowerCase().split(" "))
+        if (word == prevWord)
+            return str.toLowerCase().indexOf("$word $word")
+        else
+            prevWord = word
+    return -1
+}
 /**
  * Сложная
  *
@@ -205,7 +253,25 @@ fun firstDuplicateIndex(str: String): Int = TODO()
  * или пустую строку при нарушении формата строки.
  * Все цены должны быть больше либо равны нуля.
  */
-fun mostExpensive(description: String): String = TODO()
+fun mostExpensive(description: String): String {
+    //val prices = mutableMapOf<String, Double>()
+    var mostExpensive = Pair("", -1.0)
+    for (pairs in description.split("; ")) {
+        val elem = pairs.split(" ")
+        //println(description)
+        try {
+            if (elem.size != 2 || elem.last().toDouble() <= 0.0) {
+                return ""
+            } else
+                if (elem.last().toDouble() > mostExpensive.second) {
+                    mostExpensive = Pair(elem.first(), elem.last().toDouble())
+                }
+        } catch (e: java.lang.NumberFormatException) {
+            return ""
+        }
+    }
+    return mostExpensive.first
+}
 
 /**
  * Сложная
